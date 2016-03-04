@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+/dist
+/ideaHaskellLib
+/Setup.hs
+/out
+/LearningHaskell.cabal
+/cabal.sandbox.config
+/.cabal-sandbox
+/.idea
+/LearningHaskell.iml
+/runtests.sh
