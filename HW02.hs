@@ -82,14 +82,4 @@ masterDumb secret (guess:codes) moves
 -- Bonus ----------------------------------------------
 
 fiveGuess :: Code -> [Move]
-fiveGuess = masterMind secret ([Red, Red, Blue, Blue] : (allCodes (length secret)) []
-masterMind :: Code -> [Code] -> [Move] -> [Move]
-masterMind secret (guess:codes) moves
-          | guessed   = masterDumb secret [] (move : moves)
-          | some      = masterDumb secret (filterCodes move codes) (move : moves)
-          | otherwise = masterDumb secret codes (move : moves)
-          where {
-                    move    = getMove secret guess;
-                    some    = matches secret guess > 0;
-                    guessed = exactMatches secret guess == length secret;
-                }
+fiveGuess = undefined

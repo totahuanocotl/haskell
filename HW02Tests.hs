@@ -79,7 +79,7 @@ ex7Tests :: [Test]
 ex7Tests = [ testF1 "solve test" solve
             [ ([Red], [Move [Red] 1 0])
               , ([Blue], [Move [Red] 0 0, Move [Green] 0 0, Move [Blue] 1 0 ])
-              , ([Purple], [Move [Red] 0 0, Move [Green] 0 0, Move [Blue] 0 0, Move [Yellow] 0 0, Move [Orange] 0 0, Move [Purple] 1 0 ] ] ] ])
+              , ([Purple], [Move [Red] 0 0, Move [Green] 0 0, Move [Blue] 0 0, Move [Yellow] 0 0, Move [Orange] 0 0, Move [Purple] 1 0 ])
             ]
            ]
 
