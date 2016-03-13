@@ -32,17 +32,30 @@ data Statement =
 type State = String -> Int
 
 -- Exercise 1 -----------------------------------------
+empty :: State
+empty _ = 0
 
 extend :: State -> String -> Int -> State
-extend = undefined
-
-empty :: State
-empty = undefined
+extend state name value = (\x -> if x == name then value else state x )
 
 -- Exercise 2 -----------------------------------------
 
 evalE :: State -> Expression -> Int
-evalE = undefined
+evalE state (Val n) = n
+evalE state (Var n) = state n
+evalE state (Op exp1 op exp2)
+  | op == Plus = value1 + value2
+  | op == Minus = value1 - value2
+  | op == Times = value1 * value2
+  | op == Divide = if value2 == 0 then 0 else value1 `div` value2
+  | op == Gt = boolAsInt (value1 > value2)
+  | op == Ge = boolAsInt (value1 >= value2)
+  | op == Lt = boolAsInt (value1 < value2)
+  | op == Le = boolAsInt (value1 <= value2)
+  | op == Eql = boolAsInt (value1 == value2)
+  where boolAsInt bool = if bool then 1 else 0
+        value1 = evalE state exp1
+        value2 = evalE state exp2
 
 -- Exercise 3 -----------------------------------------
 
