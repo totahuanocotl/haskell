@@ -5,6 +5,7 @@ module LearningHaskell.HW03Tests
   , evalESuite
   , desugarSuite
   , evalSimpleSuite
+  , runProgramSuite
 ) where
 
 import Test.Tasty (testGroup, TestTree)
@@ -97,3 +98,10 @@ evalSimpleSuite = testGroup "evalSimple"
           false = Val 0
           assign x value = DAssign x (Val value)
 
+runProgramSuite :: TestTree
+runProgramSuite = testGroup "run"
+    [
+        testCase "Factorial 4" $ run (extend empty "In" 4) factorial "Out" @?= 24
+      , testCase "Square root 123" $ run (extend empty "A" 123) squareRoot "B" @?= 11
+      , testCase "Fibonacci 10" $ run (extend empty "In" 10) fibonacci "Out" @?= 89
+    ]

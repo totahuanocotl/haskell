@@ -94,7 +94,7 @@ evalSimple state (DIf expression thenStmt elseStmt)
     | otherwise = evalSimple state elseStmt
 
 run :: State -> Statement -> State
-run = undefined
+run state statement = evalSimple state (desugar statement)
 
 -- Programs -------------------------------------------
 

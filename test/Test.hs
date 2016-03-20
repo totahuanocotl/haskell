@@ -15,4 +15,5 @@ tests = testGroup "All Tests"
               , evalESuite
               , desugarSuite
               , evalSimpleSuite
+              , runProgramSuite
             ]
