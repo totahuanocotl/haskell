@@ -79,7 +79,21 @@ desugarSuite = testGroup "desugar"
 evalSimpleSuite :: TestTree
 evalSimpleSuite = testGroup "evalSimple"
     [
-        testCase "Assign" $ eval (DAssign "A" (Val 10)) "A" @?= 10
+        testCase "Skip" $ eval DSkip "A" @?= 0
+      , testCase "Assign" $ eval (DAssign "A" (Val 10)) "A" @?= 10
+      , testCase "If - then" $ eval (DIf true (assign "A" 2) (assign "A" 4)) "A" @?= 2
+      , testCase "If - else" $ eval (DIf false (assign "A" 2) (assign "A" 4)) "A" @?= 4
+      , testCase "While" $ eval (DWhile (Op (Var "A") Le (Val 3)) (desugar (Incr "A"))) "A" @?= 4
+      , testCaseSteps "Sequence" $
+            \step -> do
+                let state = evalSimple (eval (assign "x" 1)) (assign "y" 2)
+                step "stmt1"
+                state "x" @?= 1
+                step "stmt2"
+                state "y" @?= 2
     ]
     where eval = evalSimple empty
+          true = Val 1
+          false = Val 0
+          assign x value = DAssign x (Val value)
 

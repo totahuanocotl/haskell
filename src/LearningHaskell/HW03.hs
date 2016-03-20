@@ -84,8 +84,14 @@ desugar (For initialization loop update stmt) = DSequence
 -- Exercise 4 -----------------------------------------
 
 evalSimple :: State -> DietStatement -> State
+evalSimple state DSkip = state
 evalSimple state (DAssign x expression) = extend state x (evalE state expression)
-evalSimple _ _ = undefined
+evalSimple state (DSequence stmt1 stmt2) = evalSimple (evalSimple state stmt1) stmt2
+evalSimple state (DWhile expression stmt) = evalSimple state (DIf expression thenDo DSkip)
+    where thenDo = DSequence stmt (DWhile expression stmt)
+evalSimple state (DIf expression thenStmt elseStmt)
+    | evalE state expression /= 0 = evalSimple state thenStmt
+    | otherwise = evalSimple state elseStmt
 
 run :: State -> Statement -> State
 run = undefined
