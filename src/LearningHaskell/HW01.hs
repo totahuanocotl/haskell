@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}
-module HW01 where
+module LearningHaskell.HW01 where
 
 -- Exercise 1 -----------------------------------------
 

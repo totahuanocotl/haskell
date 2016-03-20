@@ -2,10 +2,10 @@
 --
 -- Test cases for HW 02
 
-module HW02Tests where
+module LearningHaskell.HW02Tests where
 
-import HW02
-import Testing
+import LearningHaskell.HW02
+import LearningHaskell.Testing
 
 
 -- Exercise 1 -----------------------------------------

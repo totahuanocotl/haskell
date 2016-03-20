@@ -1,4 +1,4 @@
-module LearningHaskell.HW03.Test
+module LearningHaskell.HW03Tests
 (
    evalESuite
   ,extendSuite

@@ -25,6 +25,8 @@ executable learning-haskell
 
 library
   exposed-modules:      LearningHaskell
+                        , LearningHaskell.HW01
+                        , LearningHaskell.HW02
                         , LearningHaskell.HW03
 
   -- other-modules:

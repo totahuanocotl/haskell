@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 {-# LANGUAGE ExistentialQuantification #-}
-module Testing where
+module LearningHaskell.Testing where
 
 import Data.Maybe
 import Control.Arrow
@@ -18,7 +18,7 @@ runTest (Test s f as) = case filter (not . f) as of
                           fs -> Just $ Fail s fs
 
 runTests :: [Test] -> [Failure]
-runTests = catMaybes . map runTest
+runTests = mapMaybe runTest
 
 -- Helpers
 
