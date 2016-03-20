@@ -43,16 +43,16 @@ extend state name value x = if x == name then value else state x
 evalE :: State -> Expression -> Int
 evalE _ (Val n) = n
 evalE state (Var n) = state n
-evalE state (Op exp1 op exp2)
-  | op == Plus = value1 + value2
-  | op == Minus = value1 - value2
-  | op == Times = value1 * value2
-  | op == Divide = if value2 == 0 then 0 else value1 `div` value2
-  | op == Gt = boolAsInt (value1 > value2)
-  | op == Ge = boolAsInt (value1 >= value2)
-  | op == Lt = boolAsInt (value1 < value2)
-  | op == Le = boolAsInt (value1 <= value2)
-  | op == Eql = boolAsInt (value1 == value2)
+evalE state (Op exp1 operator exp2) = case operator of
+  Plus -> value1 + value2
+  Minus -> value1 - value2
+  Times -> value1 * value2
+  Divide -> if value2 == 0 then 0 else value1 `div` value2
+  Gt -> boolAsInt (value1 > value2)
+  Ge -> boolAsInt (value1 >= value2)
+  Lt -> boolAsInt (value1 < value2)
+  Le -> boolAsInt (value1 <= value2)
+  Eql -> boolAsInt (value1 == value2)
   where boolAsInt bool = if bool then 1 else 0
         value1 = evalE state exp1
         value2 = evalE state exp2
@@ -84,14 +84,15 @@ desugar (For initialization loop update stmt) = DSequence
 -- Exercise 4 -----------------------------------------
 
 evalSimple :: State -> DietStatement -> State
-evalSimple state DSkip = state
-evalSimple state (DAssign x expression) = extend state x (evalE state expression)
-evalSimple state (DSequence stmt1 stmt2) = evalSimple (evalSimple state stmt1) stmt2
-evalSimple state (DWhile expression stmt) = evalSimple state (DIf expression thenDo DSkip)
-    where thenDo = DSequence stmt (DWhile expression stmt)
-evalSimple state (DIf expression thenStmt elseStmt)
-    | evalE state expression /= 0 = evalSimple state thenStmt
-    | otherwise = evalSimple state elseStmt
+evalSimple state statement = case statement of
+    DSkip                   -> state
+    DAssign x expression    -> extend state x (evalE state expression)
+    DSequence stmt1 stmt2   -> evalSimple (evalSimple state stmt1) stmt2
+    DWhile expression stmt  -> evalSimple state (DIf expression thenDo DSkip)
+                      where thenDo = DSequence stmt (DWhile expression stmt)
+    DIf expression thenStmt elseStmt
+        | evalE state expression /= 0 -> evalSimple state thenStmt
+        | otherwise                   -> evalSimple state elseStmt
 
 run :: State -> Statement -> State
 run state statement = evalSimple state (desugar statement)

@@ -44,14 +44,8 @@ executable test-learning-haskell
   build-depends:        base >=4.7 && <4.8, Cabal >= 1.16.0
                         , learning-haskell
                         , HUnit
-                        , hspec
-                        , QuickCheck
-                        , smallcheck
                         , tasty
                         , tasty-hunit
-                        , tasty-hspec
-                        , tasty-quickcheck
-                        , tasty-smallcheck
 test-suite Tests
   hs-source-dirs:       test
   ghc-options:          -Wall
@@ -61,11 +55,5 @@ test-suite Tests
   build-depends:         base >=4.7 && <4.8, Cabal >= 1.16.0
                         , learning-haskell
                         , HUnit
-                        , hspec
-                        , QuickCheck
-                        , smallcheck
                         , tasty
                         , tasty-hunit
-                        , tasty-hspec
-                        , tasty-quickcheck
-                        , tasty-smallcheck
