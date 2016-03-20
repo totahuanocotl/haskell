@@ -13,4 +13,6 @@ tests = testGroup "All Tests"
             [   emptySuite
               , extendSuite
               , evalESuite
+              , desugarSuite
+              , evalSimpleSuite
             ]

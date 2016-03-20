@@ -1,8 +1,10 @@
 module LearningHaskell.HW03Tests
 (
-   evalESuite
-  ,extendSuite
-  ,emptySuite
+    emptySuite
+  , extendSuite
+  , evalESuite
+  , desugarSuite
+  , evalSimpleSuite
 ) where
 
 import Test.Tasty (testGroup, TestTree)
@@ -55,7 +57,29 @@ evalESuite = testGroup "evalE"
     ]
     where apply a bop b = evalE empty (Op (Val a) bop (Val b))
 
+desugarSuite :: TestTree
+desugarSuite = testGroup "desugar"
+    [   testCase "Skip"     $ desugar Skip @?= DSkip
+      , testCase "Assign"   $ desugar (Assign "x" x) @?= DAssign "x" x
+      , testCase "If"       $ desugar (If x Skip Skip) @?= DIf x DSkip DSkip
+      , testCase "While"    $ desugar (While x Skip) @?= DWhile x DSkip
+      , testCase "Sequence" $ desugar (Sequence Skip Skip) @?= DSequence DSkip DSkip
+      , testCase "Incr"     $ desugar (Incr "x") @?= DAssign "x" (Op (Var "x") Plus (Val 1))
+      , testCase "For"      $ desugar (For (Assign "x" (Val 0)) (Op x Le y) (Incr "x") Skip) @?=
+                                       DSequence
+                                        (DAssign "x" (Val 0))
+                                        (DWhile (Op x Le y)
+                                            (DSequence
+                                                DSkip
+                                                (desugar (Incr "x"))))
+    ]
+    where x = Var "x"
+          y = Var "y"
 
-
-
+evalSimpleSuite :: TestTree
+evalSimpleSuite = testGroup "evalSimple"
+    [
+        testCase "Assign" $ eval (DAssign "A" (Val 10)) "A" @?= 10
+    ]
+    where eval = evalSimple empty
 
