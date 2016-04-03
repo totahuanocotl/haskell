@@ -21,9 +21,9 @@ polynomial = testGroup "x"
 
 equality :: TestTree
 equality = testGroup "equality"
-    [   testCase "same"       $ P [1, 2, 3] @?= P [1, 2, 3]
-      , testCase "equivalent" $ P [1, 2]    @?= P [1, 2, 0]
-      , testCase "different"  $ P [1, 2, 3] /= P [3, 2, 1] @?= True
+    [   testCase "same"       $ P [1, 2, 3]                 @?= P [1, 2, 3]
+      , testCase "equivalent" $ P [1, 2]                    @?= P [1, 2, 0]
+      , testCase "different"  $ P [1, 2, 3] /= P [3, 2, 1]  @?= True
     ]
 
 display :: TestTree
@@ -40,8 +40,8 @@ display = testGroup "show"
 
 addition :: TestTree
 addition = testGroup "plus"
-   [   testCase "coefficient"  $ plus (P [1]) (P [2]) @?= P [3]
-     , testCase "linear"       $ plus (P [0, 1]) (P [1, 2]) @?= P [1, 3]
+   [   testCase "coefficient"  $ plus (P [1]) (P [2])             @?= P [3]
+     , testCase "linear"       $ plus (P [0, 1]) (P [1, 2])       @?= P [1, 3]
      , testCase "diff. degree" $ plus (P [1, 2]) (P [0, 0, 3, 4]) @?= P [1, 2, 3, 4]
    ]
 
@@ -55,7 +55,6 @@ multiplication = testGroup "times"
      , testCase "(1 + x) * (1 + x)"        $ times (P [1, 1]) (P [1, 1])    @?= P [1, 2, 1]
      , testCase "(1 + x) * (1 + 2x + x^2)" $ times (P [1, 1]) (P [1, 2, 1]) @?= P [1, 3, 3, 1]
    ]
-
 
 negation :: TestTree
 negation = testGroup "negate"
@@ -71,8 +70,8 @@ evaluation = testGroup "applyP"
 
 differentiation :: TestTree
 differentiation = testGroup "deriv"
-    [   testCase "coefficient"   $ deriv (P [5])     @?= P [0]
-      , testCase "2x + 3"        $ deriv (P [3, 2])  @?= P [2]
-      , testCase "2x + 3"        $ deriv (P [3, 2])  @?= P [2]
+    [   testCase "coefficient"   $ deriv (P [5])                @?= P [0]
+      , testCase "2x + 3"        $ deriv (P [3, 2])             @?= P [2]
+      , testCase "2x + 3"        $ deriv (P [3, 2])             @?= P [2]
       , testCase "(2x +3)^3 ; 3" $ nderiv 3 (P [27, 54, 36, 8]) @?= P [48]
     ]
