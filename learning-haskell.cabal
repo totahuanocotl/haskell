@@ -28,6 +28,7 @@ library
                         , LearningHaskell.HW01
                         , LearningHaskell.HW02
                         , LearningHaskell.HW03
+                        , LearningHaskell.HW04
 
   -- other-modules:
   -- other-extensions:
