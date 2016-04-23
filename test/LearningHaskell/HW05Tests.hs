@@ -9,6 +9,7 @@ module LearningHaskell.HW05Tests
   , moneyFlow
   , criminal
   , refunds
+  , writeJsonFile
 ) where
 
 import LearningHaskell.HW05
@@ -131,6 +132,22 @@ refunds = testGroup "refunds"
                                                    , to = "Isaac"
                                                    , amount = 5
                                                    , tid = "2"}
-                                       ]
+                                           ]
+    ]
 
+writeJsonFile :: TestTree
+writeJsonFile = testGroup "writeJSON"
+    [
+       testCase "transactions" $ do
+                let transactions = [  Transaction { from = "James"
+                                          , to = "Chris"
+                                          , amount = 5
+                                          , tid = "1" }
+                                    , Transaction { from = "James"
+                                          , to = "Isaac"
+                                          , amount = 5
+                                          , tid = "2" }]
+                writeJSON (resource "refunds.json") transactions
+                refundsContent <- parseFile (resource "refunds.json") :: IO (Maybe [Transaction])
+                pure length <*> refundsContent @?= Just 2
     ]

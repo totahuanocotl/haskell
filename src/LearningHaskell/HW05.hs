@@ -93,7 +93,7 @@ refund (payer:payers) (payee:payees) (txid:ids) =
 -- Exercise 8 -----------------------------------------
 
 writeJSON :: ToJSON a => FilePath -> a -> IO ()
-writeJSON = undefined
+writeJSON path = BS.writeFile path . encode
 
 -- Exercise 9 -----------------------------------------
 

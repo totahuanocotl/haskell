@@ -41,4 +41,5 @@ testsW05 = testGroup "Week 5 Tests"
               , moneyFlow
               , criminal
               , refunds
+              , writeJsonFile
             ]
