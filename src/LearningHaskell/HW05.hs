@@ -4,6 +4,7 @@ module LearningHaskell.HW05 where
 
 import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
+import Data.Bits (xor)
 import System.Environment (getArgs)
 
 import qualified Data.ByteString.Lazy as BS
@@ -14,7 +15,10 @@ import LearningHaskell.Parser
 -- Exercise 1 -----------------------------------------
 
 getSecret :: FilePath -> FilePath -> IO ByteString
-getSecret = undefined
+getSecret left right = do
+    leftContent <- BS.readFile left
+    rightContent <- BS.readFile right
+    return $ BS.pack $ filter (/=0) (BS.zipWith xor leftContent rightContent)
 
 -- Exercise 2 -----------------------------------------
 
