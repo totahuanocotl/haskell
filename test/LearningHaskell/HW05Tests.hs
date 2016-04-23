@@ -7,6 +7,7 @@ module LearningHaskell.HW05Tests
   , parseJsonFile
   , badTransactions
   , moneyFlow
+  , criminal
 ) where
 
 import LearningHaskell.HW05
@@ -82,4 +83,15 @@ moneyFlow = testGroup "moneyFlow"
                          ]
                 getFlow ts @?= Map.fromList [  ("Haskell Curry", -10)
                                               ,("Simon Peyton Jones", 10)]
+    ]
+
+criminal :: TestTree
+criminal = testGroup "criminal"
+    [
+       testCase "getFlow" $ do
+                let flow =  Map.fromList [  ("Isaac", -10)
+                                           ,("Chris", 5)
+                                           ,("James", 20)
+                                           ]
+                getCriminal flow @?= "James"
     ]

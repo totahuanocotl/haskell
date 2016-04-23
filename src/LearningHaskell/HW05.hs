@@ -7,6 +7,7 @@ import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import Data.Bits (xor)
 import Data.List
+import Data.Function
 import Control.Applicative
 import System.Environment (getArgs)
 
@@ -48,9 +49,9 @@ getBadTs :: FilePath -> FilePath -> IO (Maybe [Transaction])
 getBadTs victims transactions= do
     fakeTransactionIds <- parseFile victims :: IO (Maybe[TId])
     allTransactions <- parseFile transactions :: IO (Maybe[Transaction])
-    return $ pure filterTransactions <*> fakeTransactionIds <*> allTransactions
+    return $ pure keepFakes <*> fakeTransactionIds <*> allTransactions
     where
-         filterTransactions ids = filter (\t -> tid t `elem`  ids)
+         keepFakes ids = filter (\t -> tid t `elem`  ids)
 
 -- Exercise 5 -----------------------------------------
 
@@ -64,7 +65,8 @@ getFlow (t:ts) = credit $ debit $ getFlow ts
 -- Exercise 6 -----------------------------------------
 
 getCriminal :: Map String Integer -> String
-getCriminal = undefined
+getCriminal flow = if Map.null flow then "No criminal" else criminal flow
+    where criminal = fst . maximumBy (compare `on` fst) . Map.toList
 
 -- Exercise 7 -----------------------------------------
 
