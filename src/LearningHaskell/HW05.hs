@@ -7,7 +7,7 @@ import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import Data.Bits (xor)
 import Data.List
-import Data.Function
+import Data.Function (on)
 import Control.Applicative
 import System.Environment (getArgs)
 
@@ -40,7 +40,7 @@ parseFile :: FromJSON a => FilePath -> IO (Maybe a)
 parseFile path = do
     result <- try(BS.readFile path) :: IO (Either SomeException ByteString)
     case result of
-        Left ex -> return Nothing
+        Left _ -> return Nothing
         Right contents -> return $ decode contents
 
 -- Exercise 4 -----------------------------------------
@@ -71,7 +71,24 @@ getCriminal flow = if Map.null flow then "No criminal" else criminal flow
 -- Exercise 7 -----------------------------------------
 
 undoTs :: Map String Integer -> [TId] -> [Transaction]
-undoTs = undefined
+undoTs flow ids = let sortedByAmount = Data.List.sortBy (compare `on` fst) (Map.toList flow) in
+              let payers = filter (\f -> snd f >= 0) sortedByAmount in
+              let payees = filter (\f -> snd f < 0) sortedByAmount in
+              refund payers payees ids
+
+refund :: [(String, Integer)] -> [(String, Integer)] -> [TId] -> [Transaction]
+refund [] _ _ = []
+refund _ [] _ = []
+refund _ _ [] = []
+refund (payer:payers) (payee:payees) (txid:ids) =
+                  tx : refund (debit payer ++ payers) (credit payee ++ payees) ids
+                  where debit   = transfer negate
+                        credit  = transfer abs
+                        transfer op (name, balance) = if balance + op (amount tx) == 0 then [] else [(name, balance + op (amount tx))]
+                        tx = Transaction { from = fst payer
+                                                   , to = fst payee
+                                                   , amount = min (abs (snd payee)) (snd payer)
+                                                   , tid = txid }
 
 -- Exercise 8 -----------------------------------------
 
@@ -111,4 +128,3 @@ main = do
                         "new-ids.json"
                         "new-transactions.json"
   putStrLn crim
-

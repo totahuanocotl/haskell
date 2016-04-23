@@ -8,6 +8,7 @@ module LearningHaskell.HW05Tests
   , badTransactions
   , moneyFlow
   , criminal
+  , refunds
 ) where
 
 import LearningHaskell.HW05
@@ -74,24 +75,62 @@ badTransactions = testGroup "Transactions"
 
 moneyFlow :: TestTree
 moneyFlow = testGroup "moneyFlow"
-    [
-       testCase "getFlow" $ do
+    [  testCase "getFlow" $ do
                 let ts = [ Transaction { from = "Haskell Curry"
                            , to = "Simon Peyton Jones"
                            , amount = 10
                            , tid = "534a8de8-5a7e-4285-9801-8585734ed3dc"}
                          ]
                 getFlow ts @?= Map.fromList [  ("Haskell Curry", -10)
-                                              ,("Simon Peyton Jones", 10)]
+                                             , ("Simon Peyton Jones", 10)]
     ]
 
 criminal :: TestTree
 criminal = testGroup "criminal"
-    [
-       testCase "getFlow" $ do
+    [  testCase "no Flow" $ do
+                let flow =  Map.empty
+                getCriminal flow @?= "No criminal"
+     , testCase "getFlow" $ do
                 let flow =  Map.fromList [  ("Isaac", -10)
                                            ,("Chris", 5)
                                            ,("James", 20)
                                            ]
                 getCriminal flow @?= "James"
+    ]
+
+refunds :: TestTree
+refunds = testGroup "refunds"
+    [  testCase "no Flow" $ do
+                let flow =  Map.empty
+                undoTs flow ["1", "2"] @?= []
+
+     , testCase "no ids" $ do
+                let flow =  Map.fromList [  ("Isaac", -10)
+                                           ,("James", 10)
+                                           ]
+                undoTs flow [] @?= []
+     , testCase "simple flow" $ do
+                let flow =  Map.fromList [  ("Isaac", -10)
+                                           ,("James", 10)
+                                           ]
+                undoTs flow ["1"] @?= [ Transaction { from = "James"
+                                                   , to = "Isaac"
+                                                   , amount = 10
+                                                   , tid = "1"}
+                                       ]
+     , testCase "multi flow" $ do
+                let flow =  Map.fromList [  ("Isaac", -5)
+                                          , ("Chris", -5)
+                                          , ("James", 10)
+                                         ]
+                undoTs flow ["1", "2"] @?= [  Transaction { from = "James"
+                                                   , to = "Chris"
+                                                   , amount = 5
+                                                   , tid = "1"}
+                                            , Transaction { from = "James"
+                                                   , to = "Isaac"
+                                                   , amount = 5
+                                                   , tid = "2"}
+                                       ]
+
     ]

@@ -40,4 +40,5 @@ testsW05 = testGroup "Week 5 Tests"
               , badTransactions
               , moneyFlow
               , criminal
+              , refunds
             ]
