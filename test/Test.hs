@@ -38,4 +38,5 @@ testsW05 = testGroup "Week 5 Tests"
               , victims
               , parseJsonFile
               , badTransactions
+              , moneyFlow
             ]

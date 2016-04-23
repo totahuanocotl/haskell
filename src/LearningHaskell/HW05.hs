@@ -48,24 +48,18 @@ getBadTs :: FilePath -> FilePath -> IO (Maybe [Transaction])
 getBadTs victims transactions= do
     fakeTransactionIds <- parseFile victims :: IO (Maybe[TId])
     allTransactions <- parseFile transactions :: IO (Maybe[Transaction])
---     return $ listToMaybe $ filter (\t -> elem (tid t) (fromMaybe [] fakeTransactionIds)) (fromMaybe [] allTransactions)
     return $ pure filterTransactions <*> fakeTransactionIds <*> allTransactions
-    where filterTransactions ids = filter (\t -> tid t `elem`  ids)
-
--- getBadTs victims transactions = do
---     victimTransactions <- parseFile victims :: IO (Maybe[TId])
---     actualTransactions <- parseFile transactions :: IO (Maybe[Transaction])
---     let common = pure filterTransactions <*> victimTransactions <*> actualTransactions
---     return $ common
---
--- filterTransactions :: [TId] -> [Transaction] -> [Transaction]
--- filterTransactions tids transactions = Data.List.filter (\ t -> Data.List.elem (tid t) tids) transactions
-
+    where
+         filterTransactions ids = filter (\t -> tid t `elem`  ids)
 
 -- Exercise 5 -----------------------------------------
 
 getFlow :: [Transaction] -> Map String Integer
-getFlow = undefined
+getFlow [] = Map.empty
+getFlow (t:ts) = credit $ debit $ getFlow ts
+    where
+         credit = Map.insertWith (+) (to t) (amount t)
+         debit  = Map.insertWith (+) (from t) (- (amount t))
 
 -- Exercise 6 -----------------------------------------
 

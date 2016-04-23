@@ -6,6 +6,7 @@ module LearningHaskell.HW05Tests
   , victims
   , parseJsonFile
   , badTransactions
+  , moneyFlow
 ) where
 
 import LearningHaskell.HW05
@@ -68,4 +69,17 @@ badTransactions = testGroup "Transactions"
        testCase "bad Transactions" $ do
                 transactions <- getBadTs (resource "victims.json.expected") (resource "transactions.json") :: IO (Maybe [Transaction])
                 pure length <*> transactions @?= Just 182
+    ]
+
+moneyFlow :: TestTree
+moneyFlow = testGroup "moneyFlow"
+    [
+       testCase "getFlow" $ do
+                let ts = [ Transaction { from = "Haskell Curry"
+                           , to = "Simon Peyton Jones"
+                           , amount = 10
+                           , tid = "534a8de8-5a7e-4285-9801-8585734ed3dc"}
+                         ]
+                getFlow ts @?= Map.fromList [  ("Haskell Curry", -10)
+                                              ,("Simon Peyton Jones", 10)]
     ]
