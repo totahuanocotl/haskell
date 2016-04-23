@@ -2,14 +2,16 @@
 {-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 module LearningHaskell.HW05 where
 
+import Control.Exception
 import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import Data.Bits (xor)
+import Data.List
+import Control.Applicative
 import System.Environment (getArgs)
 
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.Map.Strict as Map
-import Control.Exception
 
 import LearningHaskell.Parser
 
@@ -43,7 +45,22 @@ parseFile path = do
 -- Exercise 4 -----------------------------------------
 
 getBadTs :: FilePath -> FilePath -> IO (Maybe [Transaction])
-getBadTs = undefined
+getBadTs victims transactions= do
+    fakeTransactionIds <- parseFile victims :: IO (Maybe[TId])
+    allTransactions <- parseFile transactions :: IO (Maybe[Transaction])
+--     return $ listToMaybe $ filter (\t -> elem (tid t) (fromMaybe [] fakeTransactionIds)) (fromMaybe [] allTransactions)
+    return $ pure filterTransactions <*> fakeTransactionIds <*> allTransactions
+    where filterTransactions ids = filter (\t -> tid t `elem`  ids)
+
+-- getBadTs victims transactions = do
+--     victimTransactions <- parseFile victims :: IO (Maybe[TId])
+--     actualTransactions <- parseFile transactions :: IO (Maybe[Transaction])
+--     let common = pure filterTransactions <*> victimTransactions <*> actualTransactions
+--     return $ common
+--
+-- filterTransactions :: [TId] -> [Transaction] -> [Transaction]
+-- filterTransactions tids transactions = Data.List.filter (\ t -> Data.List.elem (tid t) tids) transactions
+
 
 -- Exercise 5 -----------------------------------------
 

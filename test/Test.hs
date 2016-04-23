@@ -36,5 +36,6 @@ testsW05 :: TestTree
 testsW05 = testGroup "Week 5 Tests"
             [   secret
               , victims
-              , transactions
+              , parseJsonFile
+              , badTransactions
             ]
