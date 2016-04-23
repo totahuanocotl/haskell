@@ -4,4 +4,5 @@ dist
 *.swp
 *~
 .ghci
+/test/resources/HW05/victims.json
 .idea
