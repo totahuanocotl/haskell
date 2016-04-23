@@ -9,6 +9,7 @@ import System.Environment (getArgs)
 
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.Map.Strict as Map
+import Control.Exception
 
 import LearningHaskell.Parser
 
@@ -28,12 +29,16 @@ decryptWithKey key destination = do
     encrypted <- BS.readFile encryptedFile
     BS.writeFile destination (BS.pack $ BS.zipWith xor encrypted (decryptKey key))
     where
-        decryptKey k = BS.concat [k | x <- [0..]]
+        decryptKey k = BS.concat [k | _ <- [0 :: Integer ..]]
 
 -- Exercise 3 -----------------------------------------
 
 parseFile :: FromJSON a => FilePath -> IO (Maybe a)
-parseFile = undefined
+parseFile path = do
+    result <- try(BS.readFile path) :: IO (Either SomeException ByteString)
+    case result of
+        Left ex -> return Nothing
+        Right contents -> return $ decode contents
 
 -- Exercise 4 -----------------------------------------
 

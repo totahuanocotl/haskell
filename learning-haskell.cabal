@@ -31,6 +31,7 @@ library
                         , LearningHaskell.HW03
                         , LearningHaskell.HW04
                         , LearningHaskell.HW05
+                        , LearningHaskell.Parser
 
   -- other-modules:
   -- other-extensions:
@@ -50,7 +51,7 @@ executable test-learning-haskell
                         , HUnit
                         , tasty
                         , tasty-hunit
-                        ,bytestring
+                        , bytestring
 test-suite Tests
   hs-source-dirs:       test
   ghc-options:          -Wall
@@ -62,4 +63,4 @@ test-suite Tests
                         , HUnit
                         , tasty
                         , tasty-hunit
-                        ,bytestring
+                        , bytestring
