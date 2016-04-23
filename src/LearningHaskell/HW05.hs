@@ -23,7 +23,12 @@ getSecret left right = do
 -- Exercise 2 -----------------------------------------
 
 decryptWithKey :: ByteString -> FilePath -> IO ()
-decryptWithKey = undefined
+decryptWithKey key destination = do
+    let encryptedFile = destination ++ ".enc"
+    encrypted <- BS.readFile encryptedFile
+    BS.writeFile destination (BS.pack $ BS.zipWith xor encrypted (decryptKey key))
+    where
+        decryptKey k = BS.concat [k | x <- [0..]]
 
 -- Exercise 3 -----------------------------------------
 

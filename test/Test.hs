@@ -35,4 +35,5 @@ testsW04 = testGroup "Week 4 Tests"
 testsW05 :: TestTree
 testsW05 = testGroup "Week 5 Tests"
             [   secret
+              , decrypt
             ]
