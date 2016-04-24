@@ -6,9 +6,8 @@ import LearningHaskell.HW03Tests
 import LearningHaskell.HW04Tests
 import LearningHaskell.HW05Tests
 
-
-test :: IO ()
-test = defaultMain testsW05
+tests :: IO ()
+tests = defaultMain testsW05
 
 testsW03 :: TestTree
 testsW03 = testGroup "Week 3 Tests"

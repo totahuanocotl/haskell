@@ -122,17 +122,17 @@ doEverything dog1 dog2 trans vict fids out = do
           writeJSON out (undoTs flow ids)
           return (getCriminal flow)
 
-main :: IO ()
-main = do
+hw05main :: IO ()
+hw05main = do
   args <- getArgs
   crim <- 
     case args of
       dog1:dog2:trans:vict:ids:out:_ ->
           doEverything dog1 dog2 trans vict ids out
-      _ -> doEverything "../test/resources/HW05/dog-original.jpg"
-                        "../test/resources/HW05/dog.jpg"
-                        "../test/resources/HW05/transactions.json"
-                        "../test/resources/HW05/victims.json"
-                        "../test/resources/HW05/new-ids.json"
-                        "../test/resources/HW05/new-transactions.json"
+      _ -> doEverything "test/resources/HW05/dog-original.jpg"
+                        "test/resources/HW05/dog.jpg"
+                        "test/resources/HW05/transactions.json"
+                        "test/resources/HW05/victims.json"
+                        "test/resources/HW05/new-ids.json"
+                        "test/resources/HW05/new-transactions.json"
   putStrLn crim

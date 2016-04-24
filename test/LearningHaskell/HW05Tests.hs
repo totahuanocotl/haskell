@@ -32,7 +32,8 @@ expectedSecretKey :: ByteString
 expectedSecretKey = "Haskell Is Great!"
 
 resource :: String -> String
-resource path = "../test/resources/HW05/" ++ path
+-- resource path = "../test/resources/HW05/" ++ path
+resource path = "test/resources/HW05/" ++ path
 
 secret :: TestTree
 secret = testGroup "getSecret"

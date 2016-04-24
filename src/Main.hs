@@ -1,3 +1,4 @@
 module Main where
+import LearningHaskell.HW05 as HW05
 main :: IO ()
-main = putStrLn "Learning Haskell"
+main = HW05.hw05main

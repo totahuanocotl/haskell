@@ -14,8 +14,8 @@ build-type:             Simple
 -- extra-source-files:
 cabal-version:          >=1.10
 
-executable learning-haskell
-  main-is:              LearningHaskell/HW05.hs
+executable hw05
+  main-is:              Main.hs
   -- other-modules:
   -- other-extensions:
   build-depends:        base >=4.7 && <4.8
@@ -27,8 +27,7 @@ executable learning-haskell
   default-language:     Haskell2010
 
 library
-  exposed-modules:      LearningHaskell
-                        , LearningHaskell.HW01
+  exposed-modules:      LearningHaskell.HW01
                         , LearningHaskell.HW02
                         , LearningHaskell.HW03
                         , LearningHaskell.HW04
@@ -48,7 +47,7 @@ library
 executable test-learning-haskell
   hs-source-dirs:       test
   ghc-options:          -Wall
-  main-is:              Test.hs
+  main-is:              Main.hs
   default-language:     Haskell2010
   build-depends:        base >=4.7 && <4.8, Cabal >= 1.16.0
                         , learning-haskell
@@ -61,7 +60,7 @@ executable test-learning-haskell
 test-suite Tests
   hs-source-dirs:       test
   ghc-options:          -Wall
-  main-is:              Test.hs
+  main-is:              Main.hs
   Type:                 exitcode-stdio-1.0
   default-language:     Haskell2010
   build-depends:         base >=4.7 && <4.8, Cabal >= 1.16.0
