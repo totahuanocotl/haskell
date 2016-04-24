@@ -44,8 +44,8 @@ plus (P l) (P r) =  P (zipWith (+) (asDegree l) (asDegree r))
 -- Exercise 5 -----------------------------------------
 
 times :: Num a => Poly a -> Poly a -> Poly a
-times (P ls) (P rs) =  sum $ map (\(c,e)-> shift e (mult c rs)) (zip ls [0..])
-                       where mult n rs = P $ map (* n) rs
+times (P ls) (P rs) =  sum $ map (\(c,e)-> shift e (mult c)) (zip ls [0..])
+                       where mult n = P $ map (* n) rs
                              shift e (P xs) = P $ replicate e 0 ++ xs
 
 -- Exercise 6 -----------------------------------------
@@ -62,7 +62,7 @@ instance Num a => Num (Poly a) where
 -- Exercise 7 -----------------------------------------
 
 applyP :: Num a => Poly a -> a -> a
-applyP (P terms) value = foldr (\(c, e) acc -> c * value ^ e + acc ) 0 (zip terms [0..])
+applyP (P terms) value = foldr (\(c, e) acc -> c * value ^ e + acc ) 0 (zip terms [0 :: Integer ..])
 
 -- Exercise 8 -----------------------------------------
 

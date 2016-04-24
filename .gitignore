@@ -4,5 +4,7 @@ dist
 *.swp
 *~
 .ghci
+/test/resources/HW05/new-transactions.json
+/test/resources/HW05/refunds.json
 /test/resources/HW05/victims.json
 .idea

@@ -71,24 +71,23 @@ getCriminal flow = if Map.null flow then "No criminal" else criminal flow
 -- Exercise 7 -----------------------------------------
 
 undoTs :: Map String Integer -> [TId] -> [Transaction]
-undoTs flow ids = let sortedByAmount = Data.List.sortBy (compare `on` fst) (Map.toList flow) in
-              let payers = filter (\f -> snd f >= 0) sortedByAmount in
-              let payees = filter (\f -> snd f < 0) sortedByAmount in
-              refund payers payees ids
+undoTs flow ids = let sortedByAmount = Data.List.sortBy (flip compare `on` fst) (Map.toList flow) in
+    let payers = filter (\f -> snd f >= 0) sortedByAmount in
+    let payees = filter (\f -> snd f < 0) sortedByAmount in
+    filter ((0 /=) . amount) (Data.List.sortBy (flip compare `on` amount) (refund payers payees ids))
 
 refund :: [(String, Integer)] -> [(String, Integer)] -> [TId] -> [Transaction]
 refund [] _ _ = []
 refund _ [] _ = []
 refund _ _ [] = []
-refund (payer:payers) (payee:payees) (txid:ids) =
-                  tx : refund (debit payer ++ payers) (credit payee ++ payees) ids
-                  where debit   = transfer negate
-                        credit  = transfer abs
-                        transfer op (name, balance) = if balance + op (amount tx) == 0 then [] else [(name, balance + op (amount tx))]
-                        tx = Transaction { from = fst payer
-                                                   , to = fst payee
-                                                   , amount = min (abs (snd payee)) (snd payer)
-                                                   , tid = txid }
+refund (payer:payers) (payee:payees) (txId:ids) =
+    tx : refund (debit payer ++ payers) (credit payee ++ payees) ids
+    where debit (name, balance)  = if balance - amount tx == 0 then [] else [(name, balance - amount tx)]
+          credit (name, balance) = if balance + amount tx == 0 then [] else [(name, balance + amount tx)]
+          tx = Transaction { from = fst payer
+                            , to = fst payee
+                            , amount = min (abs(snd payee)) (snd payer)
+                            , tid = txId }
 
 -- Exercise 8 -----------------------------------------
 
@@ -121,10 +120,10 @@ main = do
     case args of
       dog1:dog2:trans:vict:ids:out:_ ->
           doEverything dog1 dog2 trans vict ids out
-      _ -> doEverything "dog-original.jpg"
-                        "dog.jpg"
-                        "transactions.json"
-                        "victims.json"
-                        "new-ids.json"
-                        "new-transactions.json"
+      _ -> doEverything "../test/resources/HW05/dog-original.jpg"
+                        "../test/resources/HW05/dog.jpg"
+                        "../test/resources/HW05/transactions.json"
+                        "../test/resources/HW05/victims.json"
+                        "../test/resources/HW05/new-ids.json"
+                        "../test/resources/HW05/new-transactions.json"
   putStrLn crim

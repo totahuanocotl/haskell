@@ -10,6 +10,7 @@ module LearningHaskell.HW05Tests
   , criminal
   , refunds
   , writeJsonFile
+  , resource
 ) where
 
 import LearningHaskell.HW05
@@ -120,16 +121,16 @@ refunds = testGroup "refunds"
                                                    , tid = "1"}
                                        ]
      , testCase "multi flow" $ do
-                let flow =  Map.fromList [  ("Isaac", -5)
+                let flow =  Map.fromList [  ("Isaac", -10)
                                           , ("Chris", -5)
-                                          , ("James", 10)
+                                          , ("James", 15)
                                          ]
                 undoTs flow ["1", "2"] @?= [  Transaction { from = "James"
-                                                   , to = "Chris"
-                                                   , amount = 5
+                                                   , to = "Isaac"
+                                                   , amount = 10
                                                    , tid = "1"}
                                             , Transaction { from = "James"
-                                                   , to = "Isaac"
+                                                   , to = "Chris"
                                                    , amount = 5
                                                    , tid = "2"}
                                            ]
