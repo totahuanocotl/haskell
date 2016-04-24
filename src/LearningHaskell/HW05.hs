@@ -51,7 +51,7 @@ getBadTs victims transactions= do
     allTransactions <- parseFile transactions :: IO (Maybe[Transaction])
     return $ pure keepFakes <*> fakeTransactionIds <*> allTransactions
     where
-          keepFakes ids = filter (\t -> tid t `elem`  ids)
+          keepFakes ids = filter ((`elem` ids) . tid )
 
 -- Exercise 5 -----------------------------------------
 
@@ -59,7 +59,7 @@ getFlow :: [Transaction] -> Map String Integer
 getFlow [] = Map.empty
 getFlow (t:ts) = credit $ debit $ getFlow ts
     where
-          credit = Map.insertWith (+) (to t) (amount t)
+          credit = Map.insertWith (+) (to t)   (amount t)
           debit  = Map.insertWith (+) (from t) (- (amount t))
 
 -- Exercise 6 -----------------------------------------
@@ -77,26 +77,27 @@ undoTs flow = refund (desc payers) (asc payees)
           people = Map.toList flow
           payers = filter ((0<) . snd) people
           payees = filter ((0>) . snd) people
-          desc = Data.List.sortBy (flip compare `on` snd)
-          asc = Data.List.sortBy (compare `on` snd)
+          asc    = sortBy (compare `on` snd)
+          desc   = sortBy (flip compare `on` snd)
 
 refund :: [(String, Integer)] -> [(String, Integer)] -> [TId] -> [Transaction]
 refund [] _ _ = []
 refund _ [] _ = []
 refund _ _ [] = []
 refund (payer:payers) (payee:payees) (txId:ids) =
-    tx : refund (payersAfterDebit payer) (payeesAfterCredit payee) ids
+    tx : refund (payers `afterBalance` debit payer) (payees `afterBalance` credit payee) ids
     where
-          payersAfterDebit (name, balance)  = if balance - amount tx == 0
-                                              then payers
-                                              else (name, balance - amount tx) : payers
-          payeesAfterCredit (name, balance) = if balance + amount tx == 0
-                                              then payees
-                                              else (name, balance + amount tx) : payees
-          tx = Transaction { from = fst payer
-                            , to = fst payee
-                            , amount = min (abs(snd payee)) (snd payer)
-                            , tid = txId }
+          transfer = min (abs(snd payee)) (snd payer)
+          balance (_, current)   = current
+          debit (name, current)  = (name, current - transfer)
+          credit (name, current) = (name, current + transfer)
+          tx = Transaction {   from = fst payer
+                             , to = fst payee
+                             , amount = transfer
+                             , tid = txId }
+          afterBalance people person = if balance person == 0
+                                       then people
+                                       else person : people
 
 -- Exercise 8 -----------------------------------------
 
