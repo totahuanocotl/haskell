@@ -51,7 +51,7 @@ getBadTs victims transactions= do
     allTransactions <- parseFile transactions :: IO (Maybe[Transaction])
     return $ pure keepFakes <*> fakeTransactionIds <*> allTransactions
     where
-         keepFakes ids = filter (\t -> tid t `elem`  ids)
+          keepFakes ids = filter (\t -> tid t `elem`  ids)
 
 -- Exercise 5 -----------------------------------------
 
@@ -59,31 +59,40 @@ getFlow :: [Transaction] -> Map String Integer
 getFlow [] = Map.empty
 getFlow (t:ts) = credit $ debit $ getFlow ts
     where
-         credit = Map.insertWith (+) (to t) (amount t)
-         debit  = Map.insertWith (+) (from t) (- (amount t))
+          credit = Map.insertWith (+) (to t) (amount t)
+          debit  = Map.insertWith (+) (from t) (- (amount t))
 
 -- Exercise 6 -----------------------------------------
 
 getCriminal :: Map String Integer -> String
 getCriminal flow = if Map.null flow then "No criminal" else criminal flow
-    where criminal = fst . maximumBy (compare `on` fst) . Map.toList
+    where
+          criminal = fst . maximumBy (compare `on` snd) . Map.toList
 
 -- Exercise 7 -----------------------------------------
 
 undoTs :: Map String Integer -> [TId] -> [Transaction]
-undoTs flow ids = let sortedByAmount = Data.List.sortBy (flip compare `on` fst) (Map.toList flow) in
-    let payers = filter (\f -> snd f >= 0) sortedByAmount in
-    let payees = filter (\f -> snd f < 0) sortedByAmount in
-    filter ((0 /=) . amount) (Data.List.sortBy (flip compare `on` amount) (refund payers payees ids))
+undoTs flow = refund (desc payers) (asc payees)
+    where
+          people = Map.toList flow
+          payers = filter ((0<) . snd) people
+          payees = filter ((0>) . snd) people
+          desc = Data.List.sortBy (flip compare `on` snd)
+          asc = Data.List.sortBy (compare `on` snd)
 
 refund :: [(String, Integer)] -> [(String, Integer)] -> [TId] -> [Transaction]
 refund [] _ _ = []
 refund _ [] _ = []
 refund _ _ [] = []
 refund (payer:payers) (payee:payees) (txId:ids) =
-    tx : refund (debit payer ++ payers) (credit payee ++ payees) ids
-    where debit (name, balance)  = if balance - amount tx == 0 then [] else [(name, balance - amount tx)]
-          credit (name, balance) = if balance + amount tx == 0 then [] else [(name, balance + amount tx)]
+    tx : refund (payersAfterDebit payer) (payeesAfterCredit payee) ids
+    where
+          payersAfterDebit (name, balance)  = if balance - amount tx == 0
+                                              then payers
+                                              else (name, balance - amount tx) : payers
+          payeesAfterCredit (name, balance) = if balance + amount tx == 0
+                                              then payees
+                                              else (name, balance + amount tx) : payees
           tx = Transaction { from = fst payer
                             , to = fst payee
                             , amount = min (abs(snd payee)) (snd payer)
@@ -109,7 +118,7 @@ doEverything dog1 dog2 trans vict fids out = do
       case mids of
         Nothing  -> error "No ids"
         Just ids -> do
-          let flow = getFlow ts       
+          let flow = getFlow ts
           writeJSON out (undoTs flow ids)
           return (getCriminal flow)
 
