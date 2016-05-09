@@ -5,9 +5,10 @@ import Test.Tasty (defaultMain,testGroup,TestTree)
 import LearningHaskell.HW03Tests
 import LearningHaskell.HW04Tests
 import LearningHaskell.HW05Tests
+import LearningHaskell.HW06Tests
 
 tests :: IO ()
-tests = defaultMain testsW05
+tests = defaultMain testsW06
 
 testsW03 :: TestTree
 testsW03 = testGroup "Week 3 Tests"
@@ -41,4 +42,12 @@ testsW05 = testGroup "Week 5 Tests"
               , criminal
               , refunds
               , writeJsonFile
+            ]
+
+testsW06 :: TestTree
+testsW06 = testGroup "Week 6 Tests"
+            [   fibonacciNaive
+              , infiniteFibonacciNaive
+              , infiniteFibonacci
+              , streams
             ]

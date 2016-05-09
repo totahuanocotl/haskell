@@ -14,7 +14,7 @@ build-type:             Simple
 -- extra-source-files:
 cabal-version:          >=1.10
 
-executable hw05
+executable hw06
   main-is:              Main.hs
   -- other-modules:
   -- other-extensions:
@@ -23,7 +23,7 @@ executable hw05
                         , aeson
                         , containers
   hs-source-dirs:       src
-  ghc-options:          -Wall
+  ghc-options:          -Wall -rtsopts -fforce-recomp
   default-language:     Haskell2010
 
 library
@@ -32,6 +32,7 @@ library
                         , LearningHaskell.HW03
                         , LearningHaskell.HW04
                         , LearningHaskell.HW05
+                        , LearningHaskell.HW06
                         , LearningHaskell.Parser
 
   -- other-modules:

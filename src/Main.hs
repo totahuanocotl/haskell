@@ -1,4 +1,4 @@
 module Main where
-import LearningHaskell.HW05 as HW05
+import LearningHaskell.HW06 as HW06
 main :: IO ()
-main = HW05.hw05main
+main = HW06.hw06main
