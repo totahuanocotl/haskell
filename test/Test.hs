@@ -56,4 +56,5 @@ testsW06 = testGroup "Week 6 Tests"
 testsW07 :: TestTree
 testsW07 = testGroup "Week 7 Tests"
             [
+                fingerExercises
             ]

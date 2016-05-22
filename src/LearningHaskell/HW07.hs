@@ -27,17 +27,17 @@ swapV x y v = liftM2 swap (v !? x) (v !? y)
 -- Exercise 2 -----------------------------------------
 
 mapM :: Monad m => (a -> m b) -> [a] -> m [b]
-mapM = undefined
+mapM f xs = sequence (map f xs)
 
 getElts :: [Int] -> Vector a -> Maybe [a]
-getElts = undefined
+getElts indices v = mapM (v !?) indices
 
 -- Exercise 3 -----------------------------------------
 
 type Rnd a = Rand StdGen a
 
 randomElt :: Vector a -> Rnd (Maybe a)
-randomElt = undefined
+randomElt v = getRandomR (0, V.length v) >>= \x -> return $ v !? x
 
 -- Exercise 4 -----------------------------------------
 
