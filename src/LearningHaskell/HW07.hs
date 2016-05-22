@@ -42,10 +42,10 @@ randomElt v = getRandomR (0, V.length v) >>= \x -> return $ v !? x
 -- Exercise 4 -----------------------------------------
 
 randomVec :: Random a => Int -> Rnd (Vector a)
-randomVec = undefined
+randomVec n = replicateM n getRandom >>= \xs -> return $ V.fromList xs
 
 randomVecR :: Random a => Int -> (a, a) -> Rnd (Vector a)
-randomVecR = undefined
+randomVecR n range = replicateM n (getRandomR range) >>= \xs -> return $ V.fromList xs
 
 -- Exercise 5 -----------------------------------------
 

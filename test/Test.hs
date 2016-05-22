@@ -57,4 +57,5 @@ testsW07 :: TestTree
 testsW07 = testGroup "Week 7 Tests"
             [
                 fingerExercises
+              , randomization
             ]

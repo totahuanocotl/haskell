@@ -2,6 +2,7 @@
 module LearningHaskell.HW07Tests
 (
     fingerExercises
+  , randomization
 ) where
 
 import LearningHaskell.HW07
@@ -21,7 +22,12 @@ fingerExercises = testGroup "Finger Exercises"
       , testCase "swapV Just"      $ swapV 0 2 (V.fromList [1, 2, 3]) @?= Just (V.fromList [3, 2, 1])
       , testCase "swapV Nothing"   $ swapV 0 2 (V.fromList [1, 2]) @?= Nothing
       , testCase "mapM"            $ mapM Just [0..10] @?= Just [0..10]
-      , testCase "getElts Juts"    $ getElts [1,3] (V.fromList [0..9]) @?= Just [1, 3]
+    ]
+
+randomization :: TestTree
+randomization = testGroup "randomization"
+    [
+        testCase "getElts Just"    $ getElts [1,3] (V.fromList [0..9]) @?= Just [1, 3]
       , testCase "getElts Nothing" $ getElts [1,10] (V.fromList [0..9]) @?= Nothing
     ]
 
