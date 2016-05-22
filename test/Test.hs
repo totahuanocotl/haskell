@@ -6,9 +6,10 @@ import LearningHaskell.HW03Tests
 import LearningHaskell.HW04Tests
 import LearningHaskell.HW05Tests
 import LearningHaskell.HW06Tests
+import LearningHaskell.HW07Tests
 
 tests :: IO ()
-tests = defaultMain testsW06
+tests = defaultMain testsW07
 
 testsW03 :: TestTree
 testsW03 = testGroup "Week 3 Tests"
@@ -50,4 +51,9 @@ testsW06 = testGroup "Week 6 Tests"
               , infiniteFibonacciNaive
               , infiniteFibonacci
               , streams
+            ]
+
+testsW07 :: TestTree
+testsW07 = testGroup "Week 7 Tests"
+            [
             ]

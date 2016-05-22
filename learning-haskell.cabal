@@ -33,6 +33,7 @@ library
                         , LearningHaskell.HW04
                         , LearningHaskell.HW05
                         , LearningHaskell.HW06
+                        , LearningHaskell.HW07
                         , LearningHaskell.Parser
 
   -- other-modules:
