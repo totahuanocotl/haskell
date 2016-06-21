@@ -22,7 +22,7 @@ liftM f m = m >>= \x -> return $ f x
 
 swapV :: Int -> Int -> Vector a -> Maybe (Vector a)
 swapV x y v = liftM2 swap (v !? x) (v !? y)
-    where swap mY mX = v // [(x, mX),(y, mY)]
+    where swap mY mX = v // [(x, mX), (y, mY)]
 
 -- Exercise 2 -----------------------------------------
 
@@ -50,12 +50,18 @@ randomVecR n range = replicateM n (getRandomR range) >>= \xs -> return $ V.fromL
 -- Exercise 5 -----------------------------------------
 
 shuffle :: Vector a -> Rnd (Vector a)
-shuffle = undefined
+shuffle v = shuffle' (V.length v - 1)
+    where shuffle' 0 = return v
+          shuffle' x = fmap swap (getRandomR (0, x))
+            where swap y = v // [(x, v ! y), (y, v ! x)]
+
 
 -- Exercise 6 -----------------------------------------
 
 partitionAt :: Ord a => Vector a -> Int -> (Vector a, a, Vector a)
-partitionAt = undefined
+partitionAt v n = (V.ifilter (value (< pivot)) v , pivot, V.ifilter (value (>= pivot)) v)
+        where pivot = v ! n
+              value f i e = i /= n && f e
 
 -- Exercise 7 -----------------------------------------
 
@@ -66,8 +72,12 @@ quicksort (x:xs) = quicksort [ y | y <- xs, y < x ]
                    <> (x : quicksort [ y | y <- xs, y >= x ])
 
 qsort :: Ord a => Vector a -> Vector a
-qsort = undefined
-
+qsort v
+    | V.null v = V.empty
+    | otherwise = qsort' (< x) V.++ V.cons x (qsort' (>= x))
+            where x  = V.head v
+                  xs = V.tail v
+                  qsort' f = qsort [y | y <- xs, f y ]
 -- Exercise 8 -----------------------------------------
 
 qsortR :: Ord a => Vector a -> Rnd (Vector a)
