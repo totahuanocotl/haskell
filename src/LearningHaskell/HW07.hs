@@ -61,7 +61,11 @@ shuffle v = shuffle' (V.length v - 1)
 partitionAt :: Ord a => Vector a -> Int -> (Vector a, a, Vector a)
 partitionAt v n = (V.ifilter (value (< pivot)) v , pivot, V.ifilter (value (>= pivot)) v)
         where pivot = v ! n
-              value f i e = i /= n && f e
+              value f index element = index /= n && f element
+
+partitionAt' :: Ord a => Vector a -> Int -> Maybe (Vector a, a, Vector a)
+partitionAt' v n = v !? n >>= \pivot -> return (V.ifilter (value (< pivot)) v , pivot, V.ifilter (value (>= pivot)) v)
+      where value f index element = index /= n && f element
 
 -- Exercise 7 -----------------------------------------
 
@@ -81,13 +85,27 @@ qsort v
 -- Exercise 8 -----------------------------------------
 
 qsortR :: Ord a => Vector a -> Rnd (Vector a)
-qsortR = undefined
+qsortR v
+    | V.null v = return V.empty
+    | otherwise = getRandomR (0, V.length v - 1) >>= \pivot -> qsortR' (partitionAt v pivot)
+                  where qsortR' (vl, e, vr) = do
+                                              ql <- qsortR vl
+                                              qr <- qsortR vr
+                                              return $ ql V.++ V.cons e qr
 
 -- Exercise 9 -----------------------------------------
 
 -- Selection
 select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
-select = undefined
+select i v
+    | V.null v = return Nothing
+    | otherwise = select' 0 v
+                  where select' offset vs = getRandomR(0, V.length vs - 1) >>= \pivot ->  recurse (partitionAt vs pivot)
+                            where recurse (vl, e, vr) = let lvl = V.length vl + offset in
+                                                        if i == lvl then return $ Just e
+                                                        else if i < lvl then select' offset vl
+                                                        else select' (lvl + 1) vr
+
 
 -- Exercise 10 ----------------------------------------
 
