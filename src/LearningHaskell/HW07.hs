@@ -50,10 +50,10 @@ randomVecR n range = replicateM n (getRandomR range) >>= \xs -> return $ V.fromL
 -- Exercise 5 -----------------------------------------
 
 shuffle :: Vector a -> Rnd (Vector a)
-shuffle v = shuffle' (V.length v - 1)
-    where shuffle' 0 = return v
-          shuffle' x = fmap swap (getRandomR (0, x))
-            where swap y = v // [(x, v ! y), (y, v ! x)]
+shuffle vs = shuffle' (V.length vs - 1) vs
+    where shuffle' 0 v = return v
+          shuffle' x v = fmap swap (getRandomR (0, x)) >>= shuffle' (x - 1)
+                       where swap y = v // [(x, v ! y), (y, v ! x)]
 
 
 -- Exercise 6 -----------------------------------------
@@ -110,20 +110,27 @@ select i v
 -- Exercise 10 ----------------------------------------
 
 allCards :: Deck
-allCards = undefined
+allCards = [Card label suit | label <- labels, suit <- suits ]
 
 newDeck :: Rnd Deck
-newDeck =  undefined
+newDeck =  shuffle allCards
 
 -- Exercise 11 ----------------------------------------
 
 nextCard :: Deck -> Maybe (Card, Deck)
-nextCard = undefined
+nextCard d
+    | V.null d = Nothing
+    | otherwise = Just (V.head d, V.tail d)
 
 -- Exercise 12 ----------------------------------------
 
 getCards :: Int -> Deck -> Maybe ([Card], Deck)
-getCards = undefined
+getCards n d = draw n (Just ([], d))
+    where draw 0 hand = hand
+          draw x hand = do
+            (hc, hd) <- hand
+            (c, nd) <- nextCard hd
+            draw (x - 1) (Just (c:hc, nd))
 
 -- Exercise 13 ----------------------------------------
 

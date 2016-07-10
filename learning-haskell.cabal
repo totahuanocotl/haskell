@@ -14,7 +14,7 @@ build-type:             Simple
 -- extra-source-files:
 cabal-version:          >=1.10
 
-executable hw06
+executable hw07
   main-is:              Main.hs
   -- other-modules:
   -- other-extensions:
